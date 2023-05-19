@@ -1,7 +1,10 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:courseflutter/provider/product_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class GeneralScreen extends StatefulWidget {
   @override
@@ -29,8 +32,18 @@ _getCategoris(){
     super.initState();
   }
 
+  String formatedDate(date){
+    final outPutDateFormate =DateFormat('dd/MM/yyyy');
+
+    final outPutDate = outPutDateFormate.format(date);
+
+    return outPutDate;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final ProductProvider _productProvider =
+     Provider.of<ProductProvider>(context);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -38,6 +51,9 @@ _getCategoris(){
           child: Column(
             children: [
               TextFormField(
+                onChanged: (value){
+                  _productProvider.getFormData(productName: value);
+                },
                 decoration: InputDecoration(
                   labelText: 'Enter Pruduct Name',
                 ),
@@ -46,6 +62,9 @@ _getCategoris(){
                 height: 30,
                 ),
               TextFormField(
+                onChanged: (value) {
+                  _productProvider.getFormData(productPrice: double.parse(value));
+                },
                 decoration: InputDecoration(
                   labelText: 'Enter Pruduct price',
                 ),
@@ -54,6 +73,9 @@ _getCategoris(){
                 height: 30,
                 ),
                TextFormField(
+                onChanged: (value) {
+                  _productProvider.getFormData(quantity: int.parse(value));
+                },
                 decoration: InputDecoration(
                   labelText: 'Enter Pruduct Quantity',
                 ),
@@ -68,12 +90,20 @@ _getCategoris(){
                   value: e,
                   child: Text(e));
               }).toList(),
-               onChanged: (value){}),
+               onChanged: (value){
+                setState(() {
+                  _productProvider.getFormData(category: value);
+                });
+               }),
         
                SizedBox(
                 height: 30,
                 ),
                TextFormField(
+                onChanged: (value) {
+                  _productProvider.getFormData(description: value);
+                },
+                minLines: 3,
                 maxLines: 10,
                 maxLength: 800,
                 decoration:
@@ -93,11 +123,23 @@ _getCategoris(){
                       context: context, 
                       initialDate: DateTime.now(), 
                       firstDate: DateTime.now(), 
-                      lastDate: DateTime(5000));
+                      lastDate: DateTime(5000))
+                      .then((value){
+                      setState(() {
+                        _productProvider.getFormData(scheludeDate: value);
+                      });
+                      });
                   }, 
                   child: Text('Schelude'),
                   ),
-               ],),
+                  if (_productProvider.productDate['scheduleDate'] != null)
+                  Text(
+                    formatedDate(
+                      _productProvider.productDate['scheduleDate'],
+                 ),
+                ),
+               ],
+              ),
             ],
           ),
         ),

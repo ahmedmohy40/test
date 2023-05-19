@@ -7,6 +7,7 @@ import 'package:courseflutter/views/buyers/main_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 
@@ -39,7 +40,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         fontFamily: 'Brand-Bold',
       ),
-      home: VendorAuthScreen(),
+      home: MainVendorScreen(),
+       builder: EasyLoading.init(),
+
     );
   }
 }

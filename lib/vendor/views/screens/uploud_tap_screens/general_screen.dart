@@ -51,6 +51,13 @@ _getCategoris(){
           child: Column(
             children: [
               TextFormField(
+                validator: ((value) {
+                  if(value!.isEmpty){
+                    return 'Enter Pruduct Name';
+                  }else{
+                    return null;
+                  }
+                }),
                 onChanged: (value){
                   _productProvider.getFormData(productName: value);
                 },
@@ -62,6 +69,13 @@ _getCategoris(){
                 height: 30,
                 ),
               TextFormField(
+                validator: ((value) {
+                  if(value!.isEmpty){
+                    return 'Enter Pruduct price';
+                  }else{
+                    return null;
+                  }
+                }),
                 onChanged: (value) {
                   _productProvider.getFormData(productPrice: double.parse(value));
                 },
@@ -73,6 +87,13 @@ _getCategoris(){
                 height: 30,
                 ),
                TextFormField(
+                validator: ((value) {
+                  if(value!.isEmpty){
+                    return 'Enter Pruduct Quantity';
+                  }else{
+                    return null;
+                  }
+                }),
                 onChanged: (value) {
                   _productProvider.getFormData(quantity: int.parse(value));
                 },
@@ -100,6 +121,13 @@ _getCategoris(){
                 height: 30,
                 ),
                TextFormField(
+                validator: ((value) {
+                  if(value!.isEmpty){
+                    return 'Enter Pruduct Description';
+                  }else{
+                    return null;
+                  }
+                }),
                 onChanged: (value) {
                   _productProvider.getFormData(description: value);
                 },
@@ -126,11 +154,11 @@ _getCategoris(){
                       lastDate: DateTime(5000))
                       .then((value){
                       setState(() {
-                        _productProvider.getFormData(scheludeDate: value);
+                        _productProvider.getFormData(scheduleDate: value);
                       });
                       });
                   }, 
-                  child: Text('Schelude'),
+                  child: Text('Schede'),
                   ),
                   if (_productProvider.productDate['scheduleDate'] != null)
                   Text(

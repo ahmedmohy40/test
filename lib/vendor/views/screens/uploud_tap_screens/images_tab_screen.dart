@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:courseflutter/provider/product_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -68,6 +69,7 @@ List<String> _imageUrlList = [];
         ),
          TextButton(
           onPressed: ()async{
+              EasyLoading.show(status: 'Saving Images');
             for(var img in _image){
               Reference ref = _storage.ref().child('productImage').child(Uuid().v4());
               await ref.putFile(img).whenComplete(() async {
@@ -75,12 +77,13 @@ List<String> _imageUrlList = [];
                   setState(() {
                     _imageUrlList.add(value);
                     _productProvider.getFormData(imageUrlList: _imageUrlList);
+                    EasyLoading.dismiss();
                   });
                 });
                 });
             }
           }, 
-          child: Text('Uploud'),
+          child: _image.isNotEmpty ?  Text('Uploud') : Text(''),
           ),
         ],
       ),

@@ -1,57 +1,52 @@
 import 'package:courseflutter/controllers/auth_controller.dart';
+import 'package:courseflutter/provider/login_cubit/login_cubit.dart';
 import 'package:courseflutter/utils/show.snackBar.dart';
+import 'package:courseflutter/vendor/views/auth/vendor_auth.dart';
+import 'package:courseflutter/views/buyers/auth/register_screen.dart';
 import 'package:courseflutter/views/buyers/main_screen.dart';
+import 'package:courseflutter/utils/show_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
+  GlobalKey<FormState> formKey = GlobalKey();
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
+  String? email;
 
-class _LoginScreenState extends State<LoginScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final AuthController _authController = AuthController();
-  late String email;
+  String? password;
 
-  late String password;
+  bool isLoading = false;
 
-  bool _isLooding = false;
-
-  _loginUsers()async{
-    setState(() {
-      _isLooding = true;
-    });
-    if(_formKey.currentState!.validate()){
-      await _authController.loginUsers(email, password);
-      return Navigator.pushReplacement
-      (context, MaterialPageRoute(
-        builder: (BuildContext context){
-          return MainScreen();
-      }));
-    }else{
-      setState(() {
-        _isLooding = false;
-      });
-      return showSnack(context, 'Please fields must be empty');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Login Customers"s Account',
-                 style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  ),
+    return BlocListener<LoginCubit, LoginState>(
+        listener: (context, state) {
+          if (state is LoginLoading) {
+            isLoading = true;
+          } else if (state is LoginSuccess) {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (context) => MainScreen()));
+            isLoading = false;
+          } else if (state is LoginFailure) {
+            ShowSnackBar(context, state.errMessage);
+            isLoading = false;
+          }
+        },
+        child:
+        Scaffold(
+          body: Center(
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Login Customers"s Account',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(13.0),
@@ -67,73 +62,118 @@ class _LoginScreenState extends State<LoginScreen> {
                         email = value;
                       }),
                       decoration: InputDecoration(
-                      labelText: 'Enter Email',
-                    ),
+                        labelText: 'Enter Email',
+                      ),
                     ),
                   ),
-                    Padding(
-                      padding: const EdgeInsets.all(13.0),
-                      child: TextFormField(
-                        obscureText: true,
-                        validator: (value){
-                          if(value!.isEmpty){
-                            return 'Please Password must not be empty';
-                          }else{
-                            return null;
-                          }
-                        },
-                        onChanged: (value) {
-                          password = value;
-                        },
-                        decoration: InputDecoration(
-                      labelText: 'Enter Password',
-                   ),
-                 ),
+                  Padding(
+                    padding: const EdgeInsets.all(13.0),
+                    child: TextFormField(
+
+                      obscureText: true,
+                      validator: (value){
+                        if(value!.isEmpty){
+                          return 'Please Password must not be empty';
+                        }else{
+                          return null;
+                        }
+                      },
+                      onChanged: (value) {
+                        password = value;
+                      },
+                      decoration: InputDecoration(
+                        labelText: 'Enter Password',
+                      ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    InkWell(
-                      onTap: (){
-                        _loginUsers();
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        if (formKey.currentState!.validate()) {
+                          BlocProvider.of<LoginCubit>(context)
+                              .LoginUser(email: email!, password: password!);
+                        }
                       },
                       child: Container(
-                        width: MediaQuery.of(context).size.width - 40,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width - 40,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.yellow.shade900,
-                          borderRadius: BorderRadius.circular(10)
+                            color: Colors.yellow.shade900,
+                            borderRadius: BorderRadius.circular(10)
                         ),
                         child: Center(
-                          child: _isLooding
-                           ? CircularProgressIndicator(
+                          child: isLoading
+                              ? CircularProgressIndicator(
                             color: Colors.white,)
-                            : Text(
+                              : Text(
                             'Login',
                             style: TextStyle(
                               letterSpacing: 5,
                               color: Colors.white,
-                              ),
-                              ),
-                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => VendorAuthScreen(),));
+                    },
+                    child: Container(
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width - 40,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.yellow.shade900,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Center(
+                        child: isLoading
+                            ? CircularProgressIndicator(
+                          color: Colors.white,)
+                            : Text(
+                          'Login as Vendor',
+                          style: TextStyle(
+                            letterSpacing: 5,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text('Need Account?'),
                       TextButton(
-                        onPressed: (){},
-                         child: Text(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => BuyerRegisterScreen(),));
+                        },
+                        child: Text(
                           'Register',
-                          ),
-                          ),
+                        ),
+                      ),
                     ],)
-        
-            ],
+
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
+
+

@@ -32,9 +32,11 @@ final List<String> _categorylable = ['Pharmaceutical','Beauty','Baby','vetamin']
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ActionChip(
+
                     backgroundColor: Colors.yellow.shade900,
                     onPressed: () {},
-                    label: Center(
+                    label: Align(
+                      alignment: Alignment.center,
                       child: Text(
                       _categorylable[Index],
                       style: TextStyle(

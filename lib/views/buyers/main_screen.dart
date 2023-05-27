@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: 0,
+        currentIndex: _pageIndex,
         onTap: (value) {
           setState(() {
             _pageIndex = value ;
@@ -43,6 +43,7 @@ class _MainScreenState extends State<MainScreen> {
         } ,
         unselectedItemColor: Colors.black,
         selectedItemColor: Colors.yellow.shade900,
+
         items: [
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.home),
@@ -52,6 +53,8 @@ class _MainScreenState extends State<MainScreen> {
           icon: SvgPicture.asset(
             'assets/icons/explore.svg',
             width: 20,
+            color: _pageIndex==1?Colors.yellow.shade900:Colors.black,
+
             ),
           label: 'Categories',
           ),
@@ -59,28 +62,36 @@ class _MainScreenState extends State<MainScreen> {
           icon: SvgPicture.asset(
             'assets/icons/shop.svg',
             width: 20,
-            ),
+            color: _pageIndex==2?Colors.yellow.shade900:Colors.black,
+
+          ),
           label: 'Store',
           ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
             'assets/icons/cart.svg',
             width: 20,
-            ),
+            color: _pageIndex==3?Colors.yellow.shade900:Colors.black,
+
+          ),
           label: 'Cart',
           ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
             'assets/icons/search.svg',
             width: 20,
-            ),
+            color: _pageIndex==4?Colors.yellow.shade900:Colors.black,
+
+          ),
           label: 'Search',
           ),
         BottomNavigationBarItem(
           icon: SvgPicture.asset(
             'assets/icons/account.svg',
             width: 20,
-            ),
+            color: _pageIndex==5?Colors.yellow.shade900:Colors.black,
+
+          ),
           label: 'Account',
           ),  
       ],

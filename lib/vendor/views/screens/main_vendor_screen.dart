@@ -42,8 +42,8 @@ List<Widget> _pages = [
         selectedItemColor: Colors.yellow.shade900,
         items: [
         BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.money_dollar),
-           label: 'EAENINGS',
+          icon: Icon(Icons.upload),
+           label: 'UPLOUD',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.upload),

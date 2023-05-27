@@ -1,5 +1,3 @@
-
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:courseflutter/main.dart';
@@ -7,10 +5,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
- void main()  async{WidgetsFlutterBinding.ensureInitialized();
- await Firebase.initializeApp();
- runApp(const MyApp());
-  
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
 
 class BannerWidget extends StatefulWidget {
@@ -23,23 +21,22 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   final List _bannerImage = [];
 
- getBanners(){
-  return _firestore
-  .collection("banners")
-  .get()
-  .then((QuerySnapshot querySnapshot) {
-    querySnapshot.docs.forEach((doc) {
-      setState(() {
-        _bannerImage.add(doc['image']);
+  getBanners() {
+    return _firestore
+        .collection("banners")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        setState(() {
+          _bannerImage.add(doc['image']);
+        });
       });
-     });
+    });
+  }
 
-  });
- }
-
- @override
+  @override
   void initState() {
-   getBanners();
+    getBanners();
     super.initState();
   }
 
@@ -49,40 +46,44 @@ class _BannerWidgetState extends State<BannerWidget> {
       padding: const EdgeInsets.all(10.0),
       child: Container(
         height: 140,
-        width: double .infinity,
+        width: double.infinity,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
         ),
-    
         child: PageView.builder(
           itemCount: _bannerImage.length,
-          itemBuilder: (context ,index)  {
-    
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: CachedNetworkImage(
-        imageUrl: _bannerImage[index],
-        fit: BoxFit.cover,
-        placeholder: (context, url) =>   Shimmer(
-    duration: Duration(seconds: 10), //Default value
-    interval: Duration(
-      seconds: 10), //Default value: Duration(seconds: 0)
-    color: Colors.white, //Default value
-    colorOpacity: 0, //Default value
-    enabled: true, //Default value
-    direction: ShimmerDirection.fromLTRB(),  //Default Value
-    child: Container(
-      color: Colors.white,
-    ),
-  ),
-        errorWidget: (context, url, error) => Icon(Icons.error),
-     ),
-          );
-           },
-           ),
-           ),
-    ); 
+          itemBuilder: (context, index) {
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                height: 140,
+                imageUrl: _bannerImage[index],
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Shimmer(
+                  duration: Duration(seconds: 10),
+                  //Default value
+                  interval: Duration(seconds: 10),
+                  //Default value: Duration(seconds: 0)
+                  color: Colors.white,
+                  //Default value
+                  colorOpacity: 0,
+                  //Default value
+                  enabled: true,
 
+                  //Default value
+                  direction: ShimmerDirection.fromLTRB(),
+                  //Default Value
+                  child: Container(
+                    color: Colors.white,
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
